@@ -1,0 +1,21 @@
+{
+  "name": "prototipo-dam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "expo": "~57.0.26",
+    "expo-audio": "~57.0.5",
+    "expo-file-system": "~57.0.7",
+    "expo-status-bar": "~57.0.1",
+    "react": "^19.2.3",
+    "react-native": "^0.86.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "start:hotspot": "expo start --tunnel",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "private": true
+}

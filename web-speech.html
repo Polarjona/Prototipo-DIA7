@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Speech API</title>
+    <style>
+      body { max-width: 720px; margin: 40px auto; padding: 0 20px; font: 16px system-ui, sans-serif; color: #172033; }
+      button { padding: 10px 16px; margin-right: 8px; cursor: pointer; }
+      #status { color: #526174; }
+      #result { min-height: 120px; padding: 16px; border: 1px solid #ccd4df; border-radius: 8px; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>Web Speech API</h1>
+    <p id="status">Pulsa iniciar y habla en español.</p>
+    <button id="start" type="button">Iniciar</button>
+    <button id="stop" type="button" disabled>Detener</button>
+    <p id="result"></p>
+    <script>
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const status = document.querySelector("#status");
+      const result = document.querySelector("#result");
+      const start = document.querySelector("#start");
+      const stop = document.querySelector("#stop");
+
+      if (!Recognition) {
+        status.textContent = "Este navegador no admite Web Speech API.";
+        start.disabled = true;
+      } else {
+        const recognition = new Recognition();
+        let finalText = "";
+        recognition.lang = "es-ES";
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+          status.textContent = "Escuchando...";
+          start.disabled = true;
+          stop.disabled = false;
+        };
+        recognition.onresult = (event) => {
+          let interimText = "";
+          for (let i = event.resultIndex; i < event.results.length; i += 1) {
+            const text = event.results[i][0].transcript;
+            if (event.results[i].isFinal) finalText += text;
+            else interimText += text;
+          }
+          result.textContent = finalText + interimText;
+        };
+        recognition.onerror = (event) => {
+          status.textContent = `Error: ${event.error}`;
+        };
+        recognition.onend = () => {
+          status.textContent = "Transcripción detenida.";
+          start.disabled = false;
+          stop.disabled = true;
+        };
+        start.onclick = () => {
+          finalText = "";
+          result.textContent = "";
+          recognition.start();
+        };
+        stop.onclick = () => recognition.stop();
+      }
+    </script>
+  </body>
+</html>
